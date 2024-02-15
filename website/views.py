@@ -86,3 +86,20 @@ def add_record(request):
       else:
             messages.error(request, ('you must be logged it to add a record'))
             return redirect('home')            
+
+def update_record(request, pk):
+      if request.user.is_authenticated:
+        current_record = Record.objects.get(id = pk)
+        form =  AddRecordForm(request.POST or None, instance = current_record)
+        if form.is_valid():
+             form.save()
+             messages.error(request, ('record has been updated'))
+             return redirect('home') 
+        
+        return render(request, 'update_record.html', {'form':form}) 
+        # If the user is authenticated but the form is not yet submitted or is not valid, it renders the 'update_record.html' template, passing the form as context. This allows the user to see the form with the existing record data and make changes.
+
+
+      else:
+            messages.error(request, ('you must be logged it to add a record'))
+            return redirect('home')  
